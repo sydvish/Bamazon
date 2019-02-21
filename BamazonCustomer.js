@@ -19,7 +19,7 @@ var connection = mysql.createConnection({
 // connect to the mysql server and sql database
 connection.connect(function (err) {
     if (err) throw err;
-    
+
     // run the start function after the connection is made to prompt the user
     //   start();
     displayItems();
@@ -62,9 +62,6 @@ function queryProducts() {
                 {
                     name: "choice",
                     type: "input",
-                    // validate: function(val){
-
-                    // },
                     message: "Please input the ID number of the item you would like to purchase"
                 },
                 {
@@ -74,53 +71,42 @@ function queryProducts() {
                 }
             ])
             .then(function (answer) {
+                const query = connection.query(
+                    "SELECT stock_quantity, price FROM products WHERE ?",
+                    [
+                        {
+                            id: answer.choice
+                        }
+                    ],
+                    function (error, res) {
+                        if (error) throw err;
+                        // console.log(query.sql)
+                        // console.log(res)
+                        let quantChange = parseFloat(res[0].stock_quantity) - parseFloat(answer.units)
+                        if (res[0].stock_quantity >= answer.units) {
+                            connection.query(
+                                "UPDATE products SET ? WHERE ?",
+                                [
+                                    {
+                                        stock_quantity: quantChange
+                                    },
+                                    {
+                                        id: answer.choice
+                                    }
+                                ],
+                                function (error) {
+                                    if (error) throw err;
+                                    console.log("Your total is " + parseFloat(res[0].price) * parseFloat(answer.units) + "\nThank you for you purchase!")
 
-                console.log(answer.choice);
-                // get the information of the chosen item
-                var chosenItem;
-                var stock_quantity;
-                connection.query("SELECT stock_quantity FROM products WHERE id=" + answer.choice, function (err, res) {
-                    stock_quantity = res - answer.units
-                    if (res <= (answer.units)) {
-                        console.log("Thank you for your order");
-                        connection.query("UPDATE products SET stock_quantity=" + stock_quantity + 'WHERE id=' + parseInt(answer.choice));
-                    } else {
-                        console.log("Not enough units for purchase");
+                                }
+                            );
+                        } else {
+                            console.log("So sad! :( We just don't have enough to fill that order.");
+                            // start();
+                        }
                     }
-
-                    // if (chosenItem < parseInt(answer.units)) {
-                    //     // bid was high enough, so update db, let the user know, and start over
-                    //     connection.query(
-                    //         console.log("we are connected"),
-                    //         "UPDATE products SET ? WHERE ?",
-                    //         [
-                    //             {
-                    //                 unitAmount: answer.units
-                    //             },
-                    //             {
-                    //                 id: chosenItem.id
-                    //             }
-                    //         ],
-                    //         function (error) {
-                    //             if (error) throw err;
-                    //             console.log("You've purchased " + chosenItem);
-                    //             start();
-                    //         }
-                    //     );
-                    // }
-                    // else {
-                    //     // bid wasn't high enough, so apologize and start over
-                    //     console.log("Your bid was too low. Try again...");
-                    //     start();
-                    // }
-                })
-
-                // Once the customer has placed the order, your application should check if your store has enough of the product to meet the customer's request.
-
-                // If not, the app should log a phrase like Insufficient quantity!, and then prevent the order from going through.
-                // However, if your store does have enough of the product, you should fulfill the customer's order.
-
-
+                );
+                
             });
 
     });
