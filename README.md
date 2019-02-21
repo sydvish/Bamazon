@@ -1,5 +1,6 @@
 # Bamazon
 Node.js & MySQL
+
 About
 
 Bamazon is an Amazon-like storefront suing MySQL and Node.js. This app takes in orders from customers and depletes stock from the store's inventory. 
