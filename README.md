@@ -1,11 +1,16 @@
 # Bamazon
 Node.js & MySQL
-Overview
-In this activity, I created an Amazon-like storefront with the MySQL and Node.js. This app takes in orders from customers and depletes stock from the store's inventory. 
+About
+
+Bamazon is an Amazon-like storefront suing MySQL and Node.js. This app takes in orders from customers and depletes stock from the store's inventory. 
 
 
-OVERVIEW
-The table inside of the database called products will hold each of the following columns:
+What it does
+When the bamazon page is loaded the customer is greeted to the store and asked if they would like to see what's in stock
+
+![](images/Bamazon1.png)
+
+The table inside of the database holds each of the following columns:
 
 item_id (unique id for each product)
 
@@ -17,7 +22,9 @@ price (cost to customer)
 
 stock_quantity (how much of the product is available in stores)
 
-![](images/Bamazon1.png)
+When the table is loaded the customer is asked to enter the ID number of the item they would like to purchase
+
+![](images/Bamazon2.png)
 
 
 Then create a Node application called bamazonCustomer.js. Running this application will first display all of the items available for sale. Include the ids, names, and prices of products for sale.
